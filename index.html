@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlumBOT — AI Automation Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js"></script>
+  <style>
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-violet:    #7C3AED;
+      --color-deep:      #0D0A1E;
+      --color-iris:      #DDD6FE;
+      --color-frost:     #F5F3FF;
+      --color-teal:      #14B8A6;
+      --font-brand:      'Inter', sans-serif;
+      --font-mono:       'IBM Plex Mono', monospace;
+
+      --violet-dim:      #6025c4;
+      --violet-glow:     rgba(124, 58, 237, 0.35);
+      --iris-dim:        rgba(221, 214, 254, 0.08);
+
+      /* Plum palette used throughout */
+      --color-plum:      #7C3AED;
+      --plum-glow:       rgba(124, 58, 237, 0.35);
+      --color-offwhite:  #F5F3FF;
+      --lavender-dim:    rgba(115, 59, 109, 0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-brand);
+      background: transparent;
+      color: var(--color-frost);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── SECTION GLASSMORPHISM (lets fixed hero canvas show through) ── */
+    .marquee-section,
+    #services,
+    #process,
+    #why,
+    #testimonials,
+    #cta {
+      background: rgba(13, 10, 30, 0.80);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    footer {
+      background: rgba(13, 10, 30, 0.93);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    /* ─────────────────────────────────────────
+       NOISE TEXTURE OVERLAY
+    ───────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ─────────────────────────────────────────
+       SCROLLBAR
+    ───────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--color-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--color-violet); border-radius: 3px; }
+
+    /* ─────────────────────────────────────────
+       UTILITY
+    ───────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-iris);
+      border: 1px solid var(--color-violet);
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--color-frost);
+    }
+
+    .section-title span { color: var(--color-iris); }
+
+    .section-sub {
+      margin-top: 12px;
+      font-size: 0.95rem;
+      color: var(--color-iris);
+      opacity: 0.75;
+      max-width: 560px;
+    }
+
+    /* ─────────────────────────────────────────
+       BUTTONS
+    ───────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-brand);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary {
+      background: var(--color-violet);
+      color: var(--color-frost);
+      box-shadow: 0 0 32px var(--violet-glow);
+    }
+    .btn-primary:hover {
+      background: var(--violet-dim);
+      box-shadow: 0 0 48px var(--violet-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-iris);
+      border: 1px solid rgba(221, 214, 254, 0.25);
+    }
+    .btn-ghost:hover {
+      border-color: var(--color-iris);
+      color: var(--color-frost);
+      transform: translateY(-2px);
+    }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 18px 0;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(13, 10, 30, 0.7);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+      transition: background 0.3s;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    .nav-logo-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--color-frost);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-logo-text span { color: var(--color-iris); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--color-iris);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .nav-links a:hover { opacity: 1; color: var(--color-frost); }
+
+    .nav-cta { display: flex; align-items: center; gap: 12px; }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--color-iris);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-toggle { display: flex; }
+    }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      touch-action: none;
+      z-index: -1;
+    }
+
+    /* Dark overlay to keep text readable */
+    #hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center top, rgba(13,10,30,0.25) 0%, rgba(13,10,30,0.60) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #hero .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Radial glow behind hero */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(124,58,237,0.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-iris);
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--color-violet);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+
+    .hero-title .highlight {
+      color: var(--color-iris);
+      position: relative;
+    }
+
+    .hero-title .highlight::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 2px;
+      background: var(--color-violet);
+      border-radius: 2px;
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      color: var(--color-iris);
+      opacity: 0.8;
+      margin-bottom: 40px;
+      max-width: 440px;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .hero-stat-row {
+      display: flex;
+      gap: 40px;
+      margin-top: 52px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(221, 214, 254, 0.1);
+    }
+
+    .hero-stat-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--color-frost);
+    }
+
+    .hero-stat-label {
+      font-size: 0.72rem;
+      color: var(--color-iris);
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    /* Terminal card */
+    .hero-visual {
+      position: relative;
+    }
+
+    .terminal {
+      background: rgba(28, 18, 27, 0.95);
+      border: 1px solid rgba(115, 59, 109, 0.4);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(115,59,109,0.1);
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      background: rgba(115, 59, 109, 0.12);
+      border-bottom: 1px solid rgba(115, 59, 109, 0.2);
+    }
+
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .td-red   { background: #FF6058; }
+    .td-yellow{ background: #FFBD2E; }
+    .td-green { background: #28CA42; }
+
+    .terminal-title {
+      font-size: 0.75rem;
+      color: var(--color-iris);
+      opacity: 0.5;
+      margin-left: 8px;
+    }
+
+    .terminal-body {
+      padding: 24px 22px;
+      font-size: 0.8rem;
+      line-height: 2;
+    }
+
+    .t-comment { color: #5a4255; }
+    .t-key     { color: var(--color-iris); }
+    .t-val     { color: #c3a8e0; }
+    .t-str     { color: #a5d6a7; }
+    .t-fn      { color: #ffcc80; }
+    .t-prompt  { color: var(--color-plum); }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--color-plum);
+      vertical-align: middle;
+      animation: blink 1.1s step-end infinite;
+      border-radius: 1px;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Spline robot viewer ── */
+    .spline-wrap {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(124,58,237,0.1);
+    }
+
+    spline-viewer {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .spline-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(13, 10, 30, 0.85);
+      color: var(--color-iris);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      gap: 10px;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+
+    .spline-loading svg {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hero-badge {
+      position: absolute;
+      bottom: -16px;
+      right: -16px;
+      background: var(--color-plum);
+      color: var(--color-offwhite);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px var(--plum-glow);
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero-visual { order: -1; }
+      .hero-badge { bottom: -12px; right: 8px; }
+    }
+
+    /* ─────────────────────────────────────────
+       MARQUEE / LOGO BAR
+    ───────────────────────────────────────── */
+    .marquee-section {
+      padding: 32px 0;
+      border-top: 1px solid rgba(227, 194, 223, 0.07);
+      border-bottom: 1px solid rgba(227, 194, 223, 0.07);
+      overflow: hidden;
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 56px;
+      animation: marquee 24s linear infinite;
+      white-space: nowrap;
+    }
+
+    .marquee-item {
+      flex-shrink: 0;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-iris);
+      opacity: 0.35;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .marquee-item::before {
+      content: '◆';
+      color: var(--color-plum);
+      font-size: 0.5rem;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─────────────────────────────────────────
+       SERVICES
+    ───────────────────────────────────────── */
+    #services {
+      padding: 100px 0;
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .services-header .section-sub {
+      margin: 12px auto 0;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .services-grid { grid-template-columns: 1fr; }
+    }
+
+    .service-card {
+      background: var(--lavender-dim);
+      border: 1px solid rgba(115, 59, 109, 0.2);
+      border-radius: 12px;
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(115,59,109,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .service-card:hover {
+      border-color: rgba(115, 59, 109, 0.55);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+    }
+
+    .service-card.featured {
+      background: linear-gradient(135deg, rgba(115,59,109,0.22) 0%, rgba(28,18,27,0.95) 100%);
+      border-color: rgba(115, 59, 109, 0.5);
+    }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: rgba(115, 59, 109, 0.2);
+      border: 1px solid rgba(115, 59, 109, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+
+    .service-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-offwhite);
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      font-size: 0.82rem;
+      color: var(--color-iris);
+      opacity: 0.7;
+      line-height: 1.7;
+    }
+
+    .service-tag {
+      display: inline-block;
+      margin-top: 18px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-plum);
+      border: 1px solid rgba(115, 59, 109, 0.35);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ─────────────────────────────────────────
+       HOW IT WORKS
+    ───────────────────────────────────────── */
+    #process {
+      padding: 100px 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(115,59,109,0.04) 50%, transparent 100%);
+    }
+
+    .process-header {
+      margin-bottom: 64px;
+    }
+
+    .process-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    @media (max-width: 800px) {
+      .process-layout { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 20px;
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(227, 194, 223, 0.07);
+      position: relative;
+      cursor: default;
+    }
+
+    .step-item:last-child { border-bottom: none; }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(115, 59, 109, 0.15);
+      border: 1px solid rgba(115, 59, 109, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-iris);
+      margin-top: 2px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .step-item:hover .step-num {
+      background: var(--color-plum);
+      border-color: var(--color-plum);
+      color: var(--color-offwhite);
+    }
+
+    .step-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-offwhite);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 0.8rem;
+      color: var(--color-iris);
+      opacity: 0.65;
+      line-height: 1.7;
+    }
+
+    /* Diagram */
+    .process-diagram {
+      position: relative;
+    }
+
+    .diagram-card {
+      background: rgba(28, 18, 27, 0.95);
+      border: 1px solid rgba(115, 59, 109, 0.3);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+
+    .diagram-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-iris);
+      opacity: 0.5;
+      margin-bottom: 20px;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 10px;
+    }
+
+    .flow-node {
+      flex: 1;
+      background: rgba(115, 59, 109, 0.12);
+      border: 1px solid rgba(115, 59, 109, 0.25);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-iris);
+      text-align: center;
+    }
+
+    .flow-node.active {
+      background: rgba(115, 59, 109, 0.35);
+      border-color: var(--color-plum);
+      color: var(--color-offwhite);
+    }
+
+    .flow-arrow {
+      flex-shrink: 0;
+      width: 28px;
+      text-align: center;
+      color: var(--color-plum);
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .diagram-output {
+      margin-top: 16px;
+      background: rgba(115, 59, 109, 0.08);
+      border: 1px dashed rgba(115, 59, 109, 0.3);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 0.72rem;
+      color: var(--color-iris);
+      opacity: 0.7;
+    }
+
+    .diagram-output strong {
+      color: var(--color-plum);
+      font-weight: 700;
+    }
+
+    /* ─────────────────────────────────────────
+       WHY US / BENEFITS
+    ───────────────────────────────────────── */
+    #why {
+      padding: 100px 0;
+    }
+
+    .why-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .why-layout { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .benefit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 36px;
+    }
+
+    .benefit-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .benefit-check {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(115, 59, 109, 0.2);
+      border: 1px solid rgba(115, 59, 109, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: var(--color-iris);
+      margin-top: 2px;
+    }
+
+    .benefit-text strong {
+      font-size: 0.88rem;
+      color: var(--color-offwhite);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .benefit-text p {
+      font-size: 0.78rem;
+      color: var(--color-iris);
+      opacity: 0.65;
+      line-height: 1.65;
+    }
+
+    /* Stats block */
+    .stats-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--lavender-dim);
+      border: 1px solid rgba(115, 59, 109, 0.2);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color 0.3s, transform 0.25s;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(115, 59, 109, 0.45);
+      transform: translateY(-3px);
+    }
+
+    .stat-card-num {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--color-offwhite);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-card-num span { color: var(--color-plum); }
+
+    .stat-card-label {
+      font-size: 0.75rem;
+      color: var(--color-iris);
+      opacity: 0.6;
+      line-height: 1.5;
+    }
+
+    /* ─────────────────────────────────────────
+       TESTIMONIALS
+    ───────────────────────────────────────── */
+    #testimonials {
+      padding: 100px 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(115,59,109,0.04) 50%, transparent 100%);
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .testimonials-header .section-sub {
+      margin: 12px auto 0;
+    }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .testi-grid { grid-template-columns: 1fr; }
+    }
+
+    .testi-card {
+      background: var(--lavender-dim);
+      border: 1px solid rgba(115, 59, 109, 0.18);
+      border-radius: 12px;
+      padding: 28px 26px;
+      transition: border-color 0.3s, transform 0.25s;
+    }
+
+    .testi-card:hover {
+      border-color: rgba(115, 59, 109, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .testi-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .testi-stars span {
+      color: var(--color-plum);
+      font-size: 0.85rem;
+    }
+
+    .testi-quote {
+      font-size: 0.83rem;
+      color: var(--color-iris);
+      opacity: 0.8;
+      line-height: 1.75;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testi-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(115, 59, 109, 0.3);
+      border: 1px solid rgba(115, 59, 109, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--color-iris);
+    }
+
+    .testi-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-offwhite);
+    }
+
+    .testi-role {
+      font-size: 0.7rem;
+      color: var(--color-iris);
+      opacity: 0.55;
+    }
+
+    /* ─────────────────────────────────────────
+       CTA SECTION
+    ───────────────────────────────────────── */
+    #cta {
+      padding: 80px 0 100px;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(115,59,109,0.25) 0%, rgba(28,18,27,0.95) 100%);
+      border: 1px solid rgba(115, 59, 109, 0.4);
+      border-radius: 20px;
+      padding: 72px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(115,59,109,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-box .section-title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
+
+    .cta-box .section-sub {
+      max-width: 500px;
+      margin: 14px auto 36px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 560px) {
+      .cta-box { padding: 48px 28px; }
+    }
+
+    /* ─────────────────────────────────────────
+       CONTACT / FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(227, 194, 223, 0.08);
+      padding: 48px 0 36px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand p {
+      font-size: 0.78rem;
+      color: var(--color-iris);
+      opacity: 0.5;
+      margin-top: 10px;
+      max-width: 260px;
+      line-height: 1.7;
+    }
+
+    .footer-col h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-iris);
+      opacity: 0.45;
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col ul a {
+      font-size: 0.8rem;
+      color: var(--color-iris);
+      opacity: 0.6;
+      text-decoration: none;
+      transition: opacity 0.2s, color 0.2s;
+    }
+
+    .footer-col ul a:hover { opacity: 1; color: var(--color-offwhite); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(227, 194, 223, 0.06);
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--color-iris);
+      opacity: 0.35;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-socials a {
+      font-size: 0.72rem;
+      color: var(--color-iris);
+      opacity: 0.4;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .footer-socials a:hover { opacity: 0.9; }
+
+    /* ─────────────────────────────────────────
+       ANIMATIONS (fade-in on scroll)
+    ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ──────────────────────────────── -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="ChatGPT_Image_Feb_7__2026__11_24_02_AM-removebg-preview (1).png" alt="PlumBOT logo" />
+        <span class="nav-logo-text">Plum<span>BOT</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#testimonials">Results</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#calculator" class="btn btn-primary">Book a Call</a>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────── -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div id="hero-overlay"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Left: copy -->
+        <div>
+          <div class="hero-eyebrow">AI Automation Studio</div>
+          <h1 class="hero-title">
+            Automate the work.<br />
+            <span class="highlight">Scale the results.</span>
+          </h1>
+          <p class="hero-desc">
+            PlumBOT builds intelligent automation systems that eliminate repetitive tasks, connect your tools, and let AI agents work around the clock — so your team can focus on what actually matters.
+          </p>
+          <div class="hero-actions">
+            <a href="#calculator" class="btn btn-primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              Get Automated
+            </a>
+            <a href="#process" class="btn btn-ghost">See How It Works</a>
+          </div>
+          <div class="hero-stat-row">
+            <div>
+              <div class="hero-stat-num">10×</div>
+              <div class="hero-stat-label">Faster Workflows</div>
+            </div>
+            <div>
+              <div class="hero-stat-num">80%</div>
+              <div class="hero-stat-label">Less Manual Work</div>
+            </div>
+            <div>
+              <div class="hero-stat-num">24/7</div>
+              <div class="hero-stat-label">Agents Running</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: interactive 3D robot -->
+        <div class="hero-visual">
+          <div class="spline-wrap">
+            <spline-viewer
+              url="https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode"
+              style="background:transparent;"
+              id="spline-robot"
+            ></spline-viewer>
+          </div>
+          <div class="hero-badge">✦ Interactive — Try It</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MARQUEE ───────────────────────────── -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item">AI Voice Agents</span>
+      <span class="marquee-item">AI Chatbots</span>
+      <span class="marquee-item">Website Design</span>
+      <span class="marquee-item">Lead Qualification</span>
+      <span class="marquee-item">Appointment Booking</span>
+      <span class="marquee-item">Conversational AI</span>
+      <span class="marquee-item">Landing Pages</span>
+      <span class="marquee-item">24/7 Automation</span>
+      <span class="marquee-item">CRM Integration</span>
+      <span class="marquee-item">Custom AI Builds</span>
+      <span class="marquee-item">AI Voice Agents</span>
+      <span class="marquee-item">AI Chatbots</span>
+      <span class="marquee-item">Website Design</span>
+      <span class="marquee-item">Lead Qualification</span>
+      <span class="marquee-item">Appointment Booking</span>
+      <span class="marquee-item">Conversational AI</span>
+      <span class="marquee-item">Landing Pages</span>
+      <span class="marquee-item">24/7 Automation</span>
+      <span class="marquee-item">CRM Integration</span>
+      <span class="marquee-item">Custom AI Builds</span>
+    </div>
+  </div>
+
+  <!-- ─── SERVICES ──────────────────────────── -->
+  <section id="services">
+    <div class="container">
+      <div class="services-header">
+        <div class="tag">What We Build</div>
+        <h2 class="section-title">Automation that <span>does the heavy lifting</span></h2>
+        <p class="section-sub">From simple task automation to full AI agent systems — we build whatever moves work off your plate.</p>
+      </div>
+      <div class="services-grid" style="grid-template-columns: repeat(3, 1fr);">
+
+        <div class="service-card featured reveal">
+          <div class="service-icon">🎙️</div>
+          <div class="service-name">AI Voice Agents</div>
+          <p class="service-desc">Custom AI voice agents that answer calls, qualify leads, book appointments, and handle customer queries — fully autonomous, around the clock.</p>
+          <span class="service-tag">Most Popular</span>
+        </div>
+
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-icon">💬</div>
+          <div class="service-name">AI Chatbots</div>
+          <p class="service-desc">Intelligent bots trained on your content that handle support, qualify leads, and answer questions on your site or Slack — 24/7.</p>
+        </div>
+
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-icon">🌐</div>
+          <div class="service-name">Websites</div>
+          <p class="service-desc">Fast, modern websites built to convert — designed with your brand, optimised for search, and ready to plug into your AI stack from day one.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PROCESS ───────────────────────────── -->
+  <section id="process">
+    <div class="container">
+      <div class="process-layout">
+
+        <div>
+          <div class="process-header">
+            <div class="tag">How It Works</div>
+            <h2 class="section-title">From audit to <span>deployed agent</span> in days</h2>
+            <p class="section-sub">A focused, no-fluff process that gets automation live fast.</p>
+          </div>
+          <div class="step-list">
+            <div class="step-item reveal">
+              <div class="step-num">01</div>
+              <div>
+                <div class="step-title">Discovery Call</div>
+                <p class="step-desc">We map your current workflows, identify the biggest time sinks, and scope exactly what to automate first.</p>
+              </div>
+            </div>
+            <div class="step-item reveal reveal-delay-1">
+              <div class="step-num">02</div>
+              <div>
+                <div class="step-title">System Design</div>
+                <p class="step-desc">We design the automation architecture — which tools, which triggers, which agents — and walk you through the plan.</p>
+              </div>
+            </div>
+            <div class="step-item reveal reveal-delay-2">
+              <div class="step-num">03</div>
+              <div>
+                <div class="step-title">Build & Test</div>
+                <p class="step-desc">We build, test with real data, and refine until it runs perfectly. You get updates throughout the build.</p>
+              </div>
+            </div>
+            <div class="step-item reveal reveal-delay-3">
+              <div class="step-num">04</div>
+              <div>
+                <div class="step-title">Deploy & Hand Off</div>
+                <p class="step-desc">We deploy to production, document everything, and train your team. Ongoing support included.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-2">
+          <div class="diagram-card">
+            <div class="diagram-title">// Live automation flow</div>
+
+            <div class="flow-row">
+              <div class="flow-node active">📥 Trigger<br/><small style="opacity:.6;font-size:.65rem;">New CRM lead</small></div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-node active">🤖 AI Agent<br/><small style="opacity:.6;font-size:.65rem;">Research + score</small></div>
+            </div>
+            <div style="text-align:center;color:var(--color-plum);font-size:.8rem;margin:6px 0;">↓</div>
+            <div class="flow-row">
+              <div class="flow-node">📧 Email<br/><small style="opacity:.6;font-size:.65rem;">Personalised outreach</small></div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-node">📅 Calendar<br/><small style="opacity:.6;font-size:.65rem;">Auto-book meeting</small></div>
+            </div>
+            <div style="text-align:center;color:var(--color-plum);font-size:.8rem;margin:6px 0;">↓</div>
+            <div class="flow-row">
+              <div class="flow-node active" style="flex:unset;width:100%;">📊 CRM Updated + Slack Notified</div>
+            </div>
+
+            <div class="diagram-output">
+              <strong>Result:</strong> Lead qualified, contacted, and booked — <em>zero human input</em>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── WHY US ────────────────────────────── -->
+  <section id="why">
+    <div class="container">
+      <div class="why-layout">
+
+        <div>
+          <div class="tag">Why PlumBOT</div>
+          <h2 class="section-title">We don't just connect apps.<br /><span>We engineer outcomes.</span></h2>
+          <div class="benefit-list">
+            <div class="benefit-item reveal">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text">
+                <strong>Built by engineers, not resellers</strong>
+                <p>We write real code and design real systems — not drag-and-drop templates that break the moment something changes.</p>
+              </div>
+            </div>
+            <div class="benefit-item reveal reveal-delay-1">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text">
+                <strong>Fast delivery, serious results</strong>
+                <p>Most automation projects go live within 1–2 weeks. We scope tightly and ship fast, then iterate based on real performance.</p>
+              </div>
+            </div>
+            <div class="benefit-item reveal reveal-delay-2">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text">
+                <strong>You own everything</strong>
+                <p>All code, workflows, and credentials belong to you. No lock-in, no retainer fees once it's built.</p>
+              </div>
+            </div>
+            <div class="benefit-item reveal reveal-delay-3">
+              <div class="benefit-check">✓</div>
+              <div class="benefit-text">
+                <strong>Ongoing support included</strong>
+                <p>Systems break when tools update. We monitor, maintain, and improve your automation so it keeps running reliably.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-block">
+          <div class="stat-card reveal">
+            <div class="stat-card-num">40<span>+</span></div>
+            <div class="stat-card-label">Automation systems built and deployed</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-1">
+            <div class="stat-card-num">10<span>×</span></div>
+            <div class="stat-card-label">Average workflow speed improvement</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-2">
+            <div class="stat-card-num">48<span>h</span></div>
+            <div class="stat-card-label">Average time to first live automation</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-3">
+            <div class="stat-card-num">100<span>%</span></div>
+            <div class="stat-card-label">Client ownership of all deliverables</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ──────────────────────── -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="testimonials-header">
+        <div class="tag">Client Results</div>
+        <h2 class="section-title">What clients <span>actually say</span></h2>
+        <p class="section-sub">Real outcomes from real automation projects.</p>
+      </div>
+      <div class="testi-grid">
+
+        <div class="testi-card reveal">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-quote">"PlumBOT automated our entire lead qualification process. What used to take my team 3 hours a day now runs overnight without anyone touching it."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">SL</div>
+            <div>
+              <div class="testi-name">Sarah L.</div>
+              <div class="testi-role">Head of Sales, SaaS Co.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal reveal-delay-1">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-quote">"They shipped a working AI agent in under two weeks. It handles 80% of our customer support tickets and our response time dropped from 6 hours to under 5 minutes."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">MK</div>
+            <div>
+              <div class="testi-name">Marcus K.</div>
+              <div class="testi-role">Founder, E-commerce Brand</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal reveal-delay-2">
+          <div class="testi-stars">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="testi-quote">"I was skeptical at first, but the ROI was obvious within the first month. Our data pipeline runs perfectly and we haven't touched it in 6 months."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">JP</div>
+            <div>
+              <div class="testi-name">Jamie P.</div>
+              <div class="testi-role">Operations Lead, SaaS Co.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ───────────────────────────────── -->
+  <section id="cta">
+    <div class="container">
+      <div class="cta-box reveal">
+        <div class="tag">Ready to automate?</div>
+        <h2 class="section-title">
+          Stop doing manually<br />
+          what a bot can do <span>better</span>.
+        </h2>
+        <p class="section-sub">
+          Book a free 30-minute discovery call. We'll map your biggest time-wasters and show you exactly what automation would look like for your business.
+        </p>
+        <div class="cta-actions">
+          <a href="#calculator" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Book Free Discovery Call
+          </a>
+          <a href="mailto:luke@plumbot.ai" class="btn btn-ghost">Send Us a Message</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BOOKING ──────────────────────────── -->
+  <section id="calculator">
+    <div class="container">
+      <div class="calculator-header reveal">
+        <div class="tag">Book a Call</div>
+        <h2 class="section-title">Ready to <span>get automated?</span></h2>
+        <p class="section-sub" style="margin: 12px auto 0;">Book a free 30-minute discovery call. We'll map your biggest time-wasters and show you exactly what automation would look like for your business.</p>
+      </div>
+      <div class="calculator-frame-wrap reveal reveal-delay-2">
+        <iframe src="https://api.leadconnectorhq.com/widget/booking/ieWCXiLMBMs9qVaCmm3k" width="100%" height="700" frameborder="0" style="display:block;"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo" style="margin-bottom:8px;display:inline-flex;">
+            <img src="ChatGPT_Image_Feb_7__2026__11_24_02_AM-removebg-preview (1).png" alt="PlumBOT" style="height:30px;" />
+            <span class="nav-logo-text" style="font-size:1rem;">Plum<span>BOT</span></span>
+          </a>
+          <p>AI automation studio building intelligent systems that do the work so you don't have to.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#services">AI Voice Agents</a></li>
+            <li><a href="#services">AI Chatbots</a></li>
+            <li><a href="#services">Websites</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#process">How It Works</a></li>
+            <li><a href="#why">Why PlumBOT</a></li>
+            <li><a href="#testimonials">Results</a></li>
+            <li><a href="#cta">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:luke@plumbot.ai">luke@plumbot.ai</a></li>
+            <li><a href="mailto:ryan@plumbot.ai">ryan@plumbot.ai</a></li>
+            <li><a href="#calculator">Book a Call</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 PlumBOT. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#">Twitter</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── SCRIPTS ───────────────────────────── -->
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Nav scroll style
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      nav.style.background = window.scrollY > 60
+        ? 'rgba(28, 18, 27, 0.92)'
+        : 'rgba(28, 18, 27, 0.7)';
+    });
+
+    // Mobile nav toggle (basic show/hide)
+    const toggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const navCta = document.querySelector('.nav-cta');
+    toggle.addEventListener('click', () => {
+      const open = navLinks.style.display === 'flex';
+      navLinks.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:rgba(28,18,27,0.97);padding:20px 24px;gap:16px;border-bottom:1px solid rgba(115,59,109,0.2);';
+      navCta.style.cssText = open ? '' : 'display:flex;position:absolute;top:calc(70px + var(--links-h,190px));left:0;right:0;background:rgba(28,18,27,0.97);padding:16px 24px;border-bottom:1px solid rgba(115,59,109,0.2);';
+    });
+
+    // Smooth close mobile nav on link click
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.style.cssText = '';
+        navCta.style.cssText = '';
+      });
+    });
+  </script>
+
+  <!-- ─── HERO SHADER ──────────────────────── -->
+  <script>
+  (function() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    const gl = canvas.getContext('webgl2');
+    if (!gl) return;
+
+    const vertSrc = `#version 300 es
+precision highp float;
+in vec4 position;
+void main(){ gl_Position = position; }`;
+
+    const fragSrc = `#version 300 es
+/*
+ * Shader adapted from Matthias Hurrle (@atzedent)
+ * Color-shifted to violet/purple palette for PlumBOT
+ */
+precision highp float;
+out vec4 O;
+uniform vec2 resolution;
+uniform float time;
+#define FC gl_FragCoord.xy
+#define T time
+#define R resolution
+#define MN min(R.x,R.y)
+
+float rnd(vec2 p) {
+  p = fract(p * vec2(12.9898, 78.233));
+  p += dot(p, p + 34.56);
+  return fract(p.x * p.y);
+}
+
+float noise(in vec2 p) {
+  vec2 i = floor(p), f = fract(p), u = f * f * (3. - 2. * f);
+  float a = rnd(i),
+        b = rnd(i + vec2(1,0)),
+        c = rnd(i + vec2(0,1)),
+        d = rnd(i + 1.);
+  return mix(mix(a,b,u.x), mix(c,d,u.x), u.y);
+}
+
+float fbm(vec2 p) {
+  float t = .0, a = 1.;
+  mat2 m = mat2(1.,-.5,.2,1.2);
+  for (int i = 0; i < 5; i++) {
+    t += a * noise(p);
+    p *= 2. * m;
+    a *= .5;
+  }
+  return t;
+}
+
+float clouds(vec2 p) {
+  float d = 1., t = .0;
+  for (float i = .0; i < 3.; i++) {
+    float a = d * fbm(i * 10. + p.x * .2 + .2 * (1. + i) * p.y + d + i * i + p);
+    t = mix(t, d, a);
+    d = a;
+    p *= 2. / (i + 1.);
+  }
+  return t;
+}
+
+void main(void) {
+  vec2 uv = (FC - .5 * R) / MN, st = uv * vec2(2., 1.);
+  vec3 col = vec3(0.);
+  float bg = clouds(vec2(st.x + T * .5, -st.y));
+  uv *= 1. - .3 * (sin(T * .2) * .5 + .5);
+
+  for (float i = 1.; i < 12.; i++) {
+    uv += .1 * cos(i * vec2(.1 + .01 * i, .8) + i * i + T * .5 + .1 * uv.x);
+    vec2 p = uv;
+    float d = length(p);
+    /* Violet palette: shift phase to favor purple/blue channel */
+    col += .00125 / d * (cos(sin(i) * vec3(2., 1., 4.)) + 1.);
+    float b = noise(i + p + bg * 1.731);
+    col += .002 * b / length(max(p, vec2(b * p.x * .02, p.y)));
+    /* Mix with deep violet instead of warm brown */
+    col = mix(col, vec3(bg * .14, bg * .06, bg * .34), d);
+  }
+
+  /* Tint final output toward violet */
+  col = col * vec3(0.85, 0.75, 1.15);
+  col = clamp(col, 0., 1.);
+  O = vec4(col, 1.);
+}`;
+
+    function compileShader(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    }
+
+    const vs = compileShader(gl.VERTEX_SHADER, vertSrc);
+    const fs = compileShader(gl.FRAGMENT_SHADER, fragSrc);
+    const prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1,-1,-1,1,1,1,-1]), gl.STATIC_DRAW);
+
+    const pos = gl.getAttribLocation(prog, 'position');
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes  = gl.getUniformLocation(prog, 'resolution');
+    const uTime = gl.getUniformLocation(prog, 'time');
+
+    function resize() {
+      const dpr = Math.max(1, 0.5 * devicePixelRatio);
+      canvas.width  = window.innerWidth  * dpr;
+      canvas.height = window.innerHeight * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    function loop(now) {
+      gl.clearColor(0.05, 0.04, 0.12, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, now * 1e-3);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+  </script>
+
+  <!-- ─── SPLINE LOADER HIDE ──────────────────── -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const viewer = document.getElementById('spline-robot');
+      const loader = document.getElementById('spline-loader');
+      if (viewer && loader) {
+        viewer.addEventListener('load', () => {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 400);
+        });
+      }
+    });
+  </script>
+
+  <!-- ─── CHATBOT WIDGET ────────────────────── -->
+  <script src="https://buildmyagent.io/widget/695d8e8d4cebb022fb290f85/widget-professional.js?widgetId=695d8e8d4cebb022fb290f85"></script>
+
+</body>
+</html>
