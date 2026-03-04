@@ -1459,6 +1459,126 @@
     [data-theme="light"] .hero-title .highlight::after { background: #7C3AED; }
     [data-theme="light"] .hero-eyebrow::before { background: #7C3AED; }
     [data-theme="light"] .testi-stars span { color: #7C3AED; }
+
+    /* ─────────────────────────────────────────
+       MOBILE NAV DRAWER
+    ───────────────────────────────────────── */
+    /* Desktop: drawer wrapper is transparent so children join the flex row */
+    .nav-drawer { display: contents; }
+
+    @media (max-width: 768px) {
+      .nav-drawer {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(13, 10, 30, 0.98);
+        padding: 20px 24px 24px;
+        gap: 0;
+        border-bottom: 1px solid rgba(115, 59, 109, 0.25);
+        z-index: 99;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      nav.mobile-open .nav-drawer { display: flex; }
+
+      .nav-drawer .nav-links {
+        display: flex !important;
+        flex-direction: column;
+        gap: 0;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(115, 59, 109, 0.18);
+      }
+
+      .nav-drawer .nav-links a {
+        font-size: 0.88rem;
+        opacity: 0.85;
+        padding: 11px 0;
+        display: block;
+      }
+
+      .nav-drawer .nav-cta {
+        display: flex !important;
+      }
+
+      .nav-drawer .nav-cta .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Hamburger → X animation */
+      .nav-toggle span { transition: transform 0.3s, opacity 0.3s; }
+      nav.mobile-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+      nav.mobile-open .nav-toggle span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+      nav.mobile-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    }
+
+    [data-theme="light"] .nav-drawer {
+      background: rgba(242, 239, 251, 0.98) !important;
+    }
+
+    /* ─────────────────────────────────────────
+       MOBILE LAYOUT OPTIMISATIONS
+    ───────────────────────────────────────── */
+    /* Section padding */
+    @media (max-width: 768px) {
+      #services, #process, #why, #testimonials { padding: 64px 0; }
+      #cta { padding: 48px 0 64px; }
+
+      /* Booking calendar section */
+      #calculator { padding: 64px 0; }
+      .calculator-header { text-align: center; }
+      .calculator-header .section-sub { margin-left: auto; margin-right: auto; }
+
+      /* Hero */
+      .hero-stat-row { gap: 24px; flex-wrap: wrap; }
+
+      /* Spline: reduce height on tablet */
+      .spline-wrap { height: 320px; }
+
+      /* CTA box */
+      .cta-box { padding: 48px 28px; }
+
+      /* Process diagram: avoid horizontal overflow */
+      .flow-node { font-size: 0.68rem; padding: 10px 10px; }
+      .flow-arrow { width: 20px; font-size: 0.75rem; }
+    }
+
+    /* Small phones */
+    @media (max-width: 480px) {
+      .hero-stat-row { gap: 16px; }
+      .hero-stat-num { font-size: 1.5rem; }
+
+      /* Hide Spline on small phones – too heavy */
+      .spline-wrap { display: none; }
+      .hero-badge { display: none; }
+
+      /* Show hero text full-width without the visual column taking space */
+      .hero-grid { gap: 24px; }
+
+      /* Touch targets */
+      .btn { min-height: 44px; padding: 13px 22px; }
+
+      /* Stat row 3-across can get tight – allow wrap */
+      .hero-stat-row { gap: 12px; }
+      .hero-stat-num { font-size: 1.4rem; }
+      .hero-stat-label { font-size: 0.68rem; }
+
+      /* Don't cap stat-row children width */
+      .hero-stat-row > div { min-width: 60px; }
+    }
+
+    /* Mobile: disable WebGL canvas and use solid bg */
+    @media (max-width: 768px) {
+      #hero-canvas { display: none; }
+      body { background: var(--color-deep); }
+    }
+
+    [data-theme="light"] body { background: #F2EFFB; }
   </style>
 </head>
 <body>
@@ -1470,14 +1590,16 @@
         <img src="ChatGPT_Image_Feb_7__2026__11_24_02_AM-removebg-preview (1).png" alt="PlumBOT logo" />
         <span class="nav-logo-text">Plum<span>BOT</span></span>
       </a>
-      <ul class="nav-links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#process">Process</a></li>
-        <li><a href="#why">Why Us</a></li>
-        <li><a href="#testimonials">Results</a></li>
-      </ul>
-      <div class="nav-cta">
-        <a href="#calculator" class="btn btn-primary">Book a Call</a>
+      <div class="nav-drawer" id="nav-drawer">
+        <ul class="nav-links">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#why">Why Us</a></li>
+          <li><a href="#testimonials">Results</a></li>
+        </ul>
+        <div class="nav-cta">
+          <a href="#calculator" class="btn btn-primary">Book a Call</a>
+        </div>
       </div>
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">
         <div class="tt-track">
@@ -1589,7 +1711,7 @@
         <h2 class="section-title">Automation that <span>does the heavy lifting</span></h2>
         <p class="section-sub">From simple task automation to full AI agent systems — we build whatever moves work off your plate.</p>
       </div>
-      <div class="services-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="services-grid">
 
         <div class="service-card featured reveal">
           <div class="service-icon">🎙️</div>
@@ -1938,22 +2060,24 @@
       nav.style.background = getNavBg(window.scrollY > 60);
     });
 
-    // Mobile nav toggle (basic show/hide)
+    // Mobile nav toggle
     const toggle = document.querySelector('.nav-toggle');
-    const navLinks = document.querySelector('.nav-links');
-    const navCta = document.querySelector('.nav-cta');
     toggle.addEventListener('click', () => {
-      const open = navLinks.style.display === 'flex';
-      navLinks.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:rgba(28,18,27,0.97);padding:20px 24px;gap:16px;border-bottom:1px solid rgba(115,59,109,0.2);';
-      navCta.style.cssText = open ? '' : 'display:flex;position:absolute;top:calc(70px + var(--links-h,190px));left:0;right:0;background:rgba(28,18,27,0.97);padding:16px 24px;border-bottom:1px solid rgba(115,59,109,0.2);';
+      nav.classList.toggle('mobile-open');
     });
 
-    // Smooth close mobile nav on link click
+    // Close mobile nav on link click
     document.querySelectorAll('.nav-links a').forEach(a => {
       a.addEventListener('click', () => {
-        navLinks.style.cssText = '';
-        navCta.style.cssText = '';
+        nav.classList.remove('mobile-open');
       });
+    });
+
+    // Close mobile nav on outside click
+    document.addEventListener('click', (e) => {
+      if (nav.classList.contains('mobile-open') && !nav.contains(e.target)) {
+        nav.classList.remove('mobile-open');
+      }
     });
   </script>
 
@@ -1962,6 +2086,8 @@
   (function() {
     const canvas = document.getElementById('hero-canvas');
     if (!canvas) return;
+    // Skip shader on mobile — canvas is hidden via CSS and drains battery
+    if (window.matchMedia('(max-width: 768px)').matches) return;
     const gl = canvas.getContext('webgl2');
     if (!gl) return;
 
@@ -2081,6 +2207,7 @@ void main(void) {
     window.addEventListener('resize', resize);
 
     function loop(now) {
+      if (document.hidden) { requestAnimationFrame(loop); return; }
       gl.clearColor(0.05, 0.04, 0.12, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(prog);
